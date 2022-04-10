@@ -1,0 +1,429 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<templates xml:space="preserve">
+
+    <t t-name="product_get_info.ProductDetails" owl="1">
+
+        <div style="font-family:Argentum Sans; height:100%;">
+            <t>
+                <div id="popup1" class="overlay" t-if="state.popup_visible">
+	                <div class="popup">
+                            <h2 style="font-weight: 600;"><span t-esc="state.part.product_details[0].display_name"/></h2>
+                            <div class="content">
+                                <label for="sale-price" style="font-size:1.2rem">Sale Price</label>
+                                <input id="sale-price" type="text"  t-attf-value="{{state.part.product_details[0].list_price}}" style="height: 36px;padding: 0 11px;border-radius: 2.5px;transition: color .2s,background .2s,border-color .2s;color: #262626;
+        background-color: #f0f0f0;
+        border: 1px solid #f0f0f0;
+        font-size: 16px;"/>
+                                <div style="display:flex; justify-content: space-evenly;margin-top: 20px;">
+                                    <button class="popup-button" t-on-click="closePopUp">Discard</button>
+                                    <button class="popup-button">Confirm</button>
+                                </div>
+
+                            </div>
+	                </div>
+                </div>
+            </t>
+            <t>
+                <t t-if="state.part_available" >
+                    <div style="display:flex;background-color:#06516E;align-items: center; padding: 0.25rem 0rem; height:80px;">
+
+                            <div style="flex: 1 1 auto;position: relative;">
+                                <SearchBar selectedProductFunction="selectProductSearchBar"/>
+                            </div>
+                    </div>
+
+                    <div style="overflow:auto;height:100%;display:flex;justify-content:center;background-color: white;">
+                        <div style="width: 80%; margin-top: 2.5rem;">
+                                    <div>
+                                        <h1 style="background-color: #06516e;padding: 10px;border-radius: 5px;font-weight: 600;color: white;"><span t-esc="state.part.product_details[0].display_name"/></h1>
+
+                                    </div>
+                                <div style="display:flex; flex-wrap:wrap; align-items: center;width:100%;">
+                                    <div style="width:49%;">
+                                        <table class="data-table">
+                                            <tr>
+                                                <td style="font-weight: 500;" >Product Type</td>
+                                                <td ><span t-esc="state.part.product_details[0].detailed_type"/></td>
+                                            </tr>
+                                            <tr>
+                                                <td style="font-weight: 500;" >Part No</td>
+                                                <td ><span t-esc="state.part.product_details[0].default_code"/></td>
+                                            </tr>
+                                            <tr>
+                                                <td style="font-weight: 500;" >Category</td>
+                                                <td ><span t-esc="state.part.product_details[0].categ_id"/></td>
+                                            </tr>
+                                            <tr>
+                                                <td style="font-weight: 500;">Barcode</td>
+                                                <td ><span t-esc="state.part.product_details[0].barcode"/></td>
+                                            </tr>
+                                            <tr>
+                                                <td style="font-weight: 500;" >Sales Description</td>
+                                                <td ><span t-esc="state.part.product_details[0].description_sale"/></td>
+                                            </tr>
+
+                                        </table>
+                                    </div>
+
+                                    <div  style="width:49%; text-align:right;">
+                                           <div>
+                                                <div style=" margin:20px;height: 240px;">
+                                                    <img t-attf-src="{{imageUrl(state.part.product_details[0].id,state.part.product_details[0].write_date)}}"
+                                                                            style="object-fit:contain; max-height: 240px; max-width:500px;border-radius:3px;"/>
+                                                </div>
+                                            </div>
+                                    </div>
+                                </div>
+                                <div style="margin: 2.5rem 0;">
+                                    <div>
+                                        <WarehouseDetailsTable warehouse_details="state.part"/>
+                                    </div>
+                                </div>
+                            <div style="height:40vh;width:100%"></div>
+                            </div>
+
+                    </div>
+
+                </t>
+                <div style="height:100%;background-color:#F3F3F3" t-else="">
+                    <div style="display:flex;text-align:center;background-color:#06516E;align-items: center; padding: 0.25rem 0rem;height:80px;">
+                    </div>
+                    <div style="width: 100%;display: flex;flex-direction: row;flex-wrap: wrap;justify-content: center;align-items: center;height:100px;">
+                        <div style="width:100%;" >
+                            <SearchBar1 selectedProductFunction="selectProductSearchBar"/>
+                        </div>
+
+
+                    </div>
+                </div>
+            </t>
+        </div>
+     </t>
+    <t t-name="product_get_info.SearchBar" owl="1">
+            <div style="min-height: 100%;width: 500px;margin-left:auto; margin-right:5px;">
+                <input class="search-bar-input" type="text" placeholder="Search The Product...." t-on-input="setQuery" t-on-click="onFocus" style="width:500px; margin-left: auto;"/>
+                <t t-if="state.is_visible" >
+                    <div class="search-bar-list" style="overflow-y: auto;position:absolute;margin-top: 10px;left: 0;right: 0;max-height: calc(100vh - 134px - 160px);cursor: pointer; ">
+                            <t t-if="state.parts.length>0">
+                                <div style="display:flex;flex-wrap:wrap;gap:8px;background-color: #F3F3F3; padding: 10px 2%;">
+                                    <t t-foreach="state.parts" t-as="part" t-key="part.id">
+                                            <div style="font-family: 'Argentum Sans'; width:150px; background-color:white; " t-on-click="selectProduct(part)">
+                                                    <div style="">
+
+                                                            <div style=" margin: 10px auto;display:flex;justify-content: center;align-items: center; width:128px;height:128px; background-color:white">
+                                                                <img t-attf-src="{{imageUrl(part.id,part.write_date)}}"
+                                                                        style="object-fit:contain; max-height:128px; max-width:128px;border-radius:3px;"/>
+                                                            </div>
+                                                            <div style="margin:0px 3px">
+                                                                <p t-if="part.default_code" style="font-size: 1.1rem;text-align: left;overflow: hidden;margin:0;font-weight: 400;">
+                                                                    <t t-esc="part.default_code"/>
+                                                                </p>
+                                                                <p style="font-size: 1.2rem;overflow: hidden;margin:0;font-weight: 600;">
+                                                                    <t t-esc="part.name"/>
+                                                                </p>
+
+                                                            </div>
+
+                                                    </div>
+                                            </div>
+
+                                    </t>
+                                </div>
+                            </t>
+                            <t t-if="state.parts.length==0">
+                                <div style="text-align:center;">
+                                    <p>No results</p>
+                                </div>
+                            </t>
+                    </div>
+                </t>
+            </div>
+    </t>
+        <t t-name="product_get_info.SearchBar1" owl="1">
+            <div style="min-height: 100%;width:80%; position:relative;margin: 2rem auto 0 auto;">
+                <input class="search-bar-input" type="text" placeholder="Search The Product...." t-on-input="setQuery" t-on-click="onFocus" style="width:500px; margin:0px auto; border:1px solid #06516E"/>
+                <t t-if="state.is_visible" >
+                    <div class="search-bar-list" style="overflow-y: auto;margin-top: 10px;left: 0;right: 0;max-height: calc(100vh - 134px - 160px);cursor: pointer; ">
+                            <t t-if="state.parts.length>0">
+                                <div style="display:flex;flex-wrap:wrap;gap:8px;background-color: #F3F3F3;">
+                                    <t t-foreach="state.parts" t-as="part" t-key="part.id">
+                                            <div style="font-family: 'Argentum Sans'; width:150px; background-color:white; " t-on-click="selectProduct(part)">
+                                                    <div style="">
+
+                                                            <div style=" margin: 10px auto;display:flex;justify-content: center;align-items: center; width:128px;height:128px; background-color:white">
+                                                                <img t-attf-src="{{imageUrl(part.id,part.write_date)}}"
+                                                                        style="object-fit:contain; max-height:128px; max-width:128px;border-radius:3px;"/>
+                                                            </div>
+                                                            <div style="margin:0px 3px">
+                                                                <p t-if="part.default_code" style="font-size: 1.1rem;text-align: left;overflow: hidden;margin:0;font-weight: 400;">
+                                                                    <t t-esc="part.default_code"/>
+                                                                </p>
+                                                                <p style="font-size: 1.2rem;overflow: hidden;margin:0;font-weight: 600;">
+                                                                    <t t-esc="part.name"/>
+                                                                </p>
+
+                                                            </div>
+
+                                                    </div>
+                                            </div>
+
+                                    </t>
+                                </div>
+                            </t>
+                            <t t-if="state.parts.length==0">
+                                <div style="text-align:center;">
+                                    <p>No results</p>
+                                </div>
+                            </t>
+                    </div>
+                </t>
+            </div>
+    </t>
+    <t t-name="product_get_info.WarehouseDetailsTable" owl="1">
+        <div style="">
+            <div style="font-family: Lato;">
+                <div style="display:flex;">
+                    <div style="width: 49%;background-color: #f3f3f3;border-radius: 5px;margin-right: 1%; font-size:14px;color: rgb(74, 74, 74);box-shadow: rgba(0, 0, 0, 0.25) 0px 1px 4px 0px;letter-spacing: 1px;">
+                        <div style="padding: 12px 20px;color: rgb(74, 74, 74);">
+                            <p style="font-size: 20px;margin:0">Pricing &amp; Cost</p>
+                        </div>
+                        <div style="border: 1px solid rgb(221, 221, 221); margin:0px 20px "></div>
+                        <div style="display:flex; width:100%;background-color:#F3F3F3;padding: 8px 16px;">
+                             <div style="width:60%;">
+                                 <p style="padding-left: 10px;margin:0;">Cost</p>
+                             </div>
+                             <div style="width:40%;text-align:right;">
+                                 <p style="margin:0;"><span t-if="props.warehouse_details.currency_data.position =='before'" t-esc="props.warehouse_details.currency_data.symbol"/><span t-esc="props.warehouse_details.product_details[0].standard_price"/><span t-if="props.warehouse_details.currency_data.position =='after'" t-esc="props.warehouse_details.currency_data.symbol"/></p>
+                             </div>
+                         </div>
+                        <div style="display:flex; width:100%;background-color:#F3F3F3;padding: 8px 16px;">
+                             <div style="width:60%;">
+                                 <p style="padding-left: 10px;margin:0;">Sale Price</p>
+                             </div>
+                             <div style="width:40%;text-align:right;">
+                                 <p style="margin:0;"><span></span><span t-if="props.warehouse_details.currency_data.position =='before'" t-esc="props.warehouse_details.currency_data.symbol"/><span t-esc="props.warehouse_details.product_details[0].list_price"/><span t-if="props.warehouse_details.currency_data.position =='after'" t-esc="props.warehouse_details.currency_data.symbol"/></p>
+                             </div>
+                         </div>
+                        <div style="border: 1px solid rgb(221, 221, 221); margin:0px 20px "></div>
+                        <div style="display:flex; width:100%;background-color:#F3F3F3;padding: 8px 16px 0px 16px;margin-top: 10px;color: rgb(123, 123, 123);font-size: 12px;">
+                                <div style="width:60%;">
+                                     <p style="padding-left: 10px;margin:0;">PRICING SCHEME</p>
+                                </div>
+                                <div style="width:40%; text-align:right;">
+                                     <p style="padding-left: 10px;margin:0;">SALES PRICE</p>
+                                </div>
+                        </div>
+                        <t t-foreach="props.warehouse_details.price_lists" t-as="price_list">
+                            <div style="display:flex; width:100%;background-color:#F3F3F3;padding: 8px 16px;">
+                                <div style="width:60%;">
+                                     <p style="padding-left: 10px;margin:0;"><span t-esc="price_list.name"/></p>
+                                </div>
+                                <div style="width:40%; text-align:right;">
+                                     <p style="padding-left: 10px;margin:0;"><span t-if="price_list.currency_data.position =='before'" t-esc="price_list.currency_data.symbol"/><span t-esc="price_list.price"/><span t-if="price_list.currency_data.position =='after'" t-esc="price_list.currency_data.symbol"/></p>
+                                </div>
+                            </div>
+                        </t>
+
+
+
+                    </div>
+                    <div style="width:50%;background-color: #06516e;color: white;letter-spacing:1px;border-radius: 5px;box-shadow: rgba(0, 0, 0, 0.25) 0px 1px 4px 0px;">
+                        <div style="display:flex; padding: 10px 20px 0px 20px;">
+                            <div style="margin-right: 20px;">
+                                <p>Quantity On Hand</p>
+                                <p style="font-size: 3rem;"><span t-esc="props.warehouse_details.product_details[0].qty_available"/></p>
+                            </div>
+                            <div>
+                                <p>Forecast Quantity</p>
+                                <p style="font-size: 3rem;"><span t-esc="props.warehouse_details.product_details[0].virtual_available"/></p>
+
+                            </div>
+                            <div style="display:flex;margin-left: auto;align-items: center;">
+                                <div>
+                                    <div style="display:flex;align-items:center; margin:0.5rem;">
+                                        <input class="checkbox-input-1" type="checkbox" id="HideNoStock" name="HideNoStock" value="HideNoStock" t-on-change="selectHideNoStock"  t-att-checked="state.is_hide_no_stock" />
+                                        <div class="checkbox-box-1"></div>
+                                        <label for="HideNoStock" style="position: static;padding: 0 0 0 5px;pointer-events: all !important;cursor: pointer;font-size: 14px;line-height: 13px; margin:0px;">Hide No Stock Locations</label>
+                                    </div>
+                                    <div style="display:flex;align-items:center; margin:0 0.5rem;">
+                                        <input class="checkbox-input-2" type="checkbox" id="ExpandAll" name="ExpandAll" value="ExpandAll" t-on-change="selectExpandAll" t-att-checked="state.is_expanded"/>
+                                        <div class="checkbox-box-2"></div>
+                                        <label for="ExpandAll" style="position: static;padding: 0 0 0 5px;pointer-events: all !important;cursor: pointer;font-size: 14px;line-height: 13px; margin:0px;">Expand All</label>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div style="border: 1px solid;margin: 0px 8px;"></div>
+                        <div>
+                            <div style="display:flex; width:100%;padding: 8px 16px;font-size: 13px;">
+                                <div style="width:55%;">
+                                    <p>Location</p>
+                                </div>
+                                <div style="width:20%;">
+                                    <p>Quantity</p>
+                                </div>
+                                <div style="width:25%;">
+                                    <p>Forecast Quantity</p>
+                                </div>
+                            </div>
+                            <div t-if="state.is_hide_no_stock">
+                                <t t-foreach="props.warehouse_details.warehouse_list_without_zero_stock" t-as="warehouse" t-key="warehouse.id" >
+                                    <CollapsableRow warehouse="warehouse" is_expanded="state.is_expanded"/>
+                                </t>
+                            </div>
+                            <div t-else="">
+                                <t t-foreach="props.warehouse_details.warehouses" t-as="warehouse" t-key="warehouse.id" >
+                                        <CollapsableRow warehouse="warehouse" is_expanded="state.is_expanded"/>
+                                </t>
+                            </div>
+                            <div style="padding:10px;"></div>
+                        </div>
+                    </div>
+                </div>
+                <div style="display:flex; margin-top:1rem;">
+                    <div style="width: 49%;background-color: #f3f3f3;border-radius: 5px;margin-right: 1%; font-size:14px;color: rgb(74, 74, 74);box-shadow: rgba(0, 0, 0, 0.25) 0px 1px 4px 0px;letter-spacing: 1px;">
+                        <div style="padding: 12px 20px;color: rgb(74, 74, 74);">
+                            <p style="font-size: 20px;margin:0">Suppliers</p>
+                        </div>
+                        <div style="border: 1px solid rgb(221, 221, 221); margin:0px 20px "></div>
+                        <div style="display:flex; width:100%;background-color:#F3F3F3;padding: 8px 16px 0px 16px;margin-top: 10px;color: rgb(123, 123, 123);font-size: 12px;">
+                                <div style="width:40%;">
+                                     <p style="padding-left: 10px;margin:0;">VENDOR</p>
+                                </div>
+                                <div style="width:15%; text-align:right;">
+                                     <p style="padding-left: 10px;margin:0;">LEAD TIME</p>
+                                </div>
+                                <div style="width:15%; text-align:right;">
+                                     <p style="padding-left: 10px;margin:0;">Qty</p>
+                                </div>
+                                <div style="width:15%; text-align:right;">
+                                     <p style="padding-left: 10px;margin:0;">UOM</p>
+                                </div>
+                                <div style="width:15%; text-align:right;">
+                                     <p style="padding-left: 10px;margin:0;">PRICE</p>
+                                </div>
+                        </div>
+                        <t t-foreach="props.warehouse_details.suppliers" t-as="supplier">
+                            <div style="display:flex; width:100%;background-color:#F3F3F3;padding: 8px 16px;">
+                                <div style="width:40%;">
+                                     <p style="padding-left: 10px;margin:0;"><span t-esc="supplier.name"/></p>
+                                </div>
+                                <div style="width:15%; text-align:right;">
+                                     <p style="padding-left: 10px;margin:0;"><span t-esc="supplier.delay"/></p>
+                                </div>
+                                <div style="width:15%; text-align:right;">
+                                     <p style="padding-left: 10px;margin:0;">1</p>
+                                </div>
+                                <div style="width:15%; text-align:right;">
+                                     <p style="padding-left: 10px;margin:0;">Units</p>
+                                </div>
+                                <div style="width:15%; text-align:right;">
+                                     <p style="padding-left: 10px;margin:0;"><span t-if="supplier.currency_data.position =='before'" t-esc="supplier.currency_data.symbol"/><span t-esc="supplier.price"/><span t-if="supplier.currency_data.position =='after'" t-esc="supplier.currency_data.symbol"/></p>
+                                </div>
+                            </div>
+                        </t>
+
+
+
+                    </div>
+                    <div style="width: 50%;background-color: #f3f3f3;border-radius: 5px; font-size:14px;color: rgb(74, 74, 74);box-shadow: rgba(0, 0, 0, 0.25) 0px 1px 4px 0px;letter-spacing: 1px;">
+                        <div style="padding: 12px 20px;color: rgb(74, 74, 74);">
+                            <p style="font-size: 20px;margin:0">UOM</p>
+                        </div>
+                        <div style="border: 1px solid rgb(221, 221, 221); margin:0px 20px "></div>
+                        <div style="display:flex; width:100%;background-color:#F3F3F3;padding: 8px 16px;">
+                             <div style="width:60%;">
+                                 <p style="padding-left: 10px;margin:0;">General UOM</p>
+                             </div>
+                             <div style="width:40%;text-align:right;">
+                                 <p style="margin:0;"><span t-esc="props.warehouse_details.product_details[0].uom_id"/></p>
+                             </div>
+                         </div>
+                        <div style="display:flex; width:100%;background-color:#F3F3F3;padding: 8px 16px;">
+                             <div style="width:60%;">
+                                 <p style="padding-left: 10px;margin:0;">Purchase UOM</p>
+                             </div>
+                             <div style="width:40%;text-align:right;">
+                                 <p style="margin:0;"><span t-esc="props.warehouse_details.product_details[0].uom_po_id"/></p>
+                             </div>
+                         </div>
+                        <div style="padding: 12px 20px;color: rgb(74, 74, 74);">
+                            <p style="font-size: 20px;margin:0">Logistic</p>
+                        </div>
+                        <div style="border: 1px solid rgb(221, 221, 221); margin:0px 20px "></div>
+                        <div style="display:flex; width:100%;background-color:#F3F3F3;padding: 8px 16px;">
+                             <div style="width:60%;">
+                                 <p style="padding-left: 10px;margin:0;">Weight</p>
+                             </div>
+                             <div style="width:40%;text-align:right;">
+                                 <p style="margin:0;"><span t-esc="props.warehouse_details.product_details[0].weight"/><span t-esc="props.warehouse_details.product_details[0].weight_uom_name"/></p>
+                             </div>
+                         </div>
+                        <div style="display:flex; width:100%;background-color:#F3F3F3;padding: 8px 16px;">
+                             <div style="width:60%;">
+                                 <p style="padding-left: 10px;margin:0;">Volume</p>
+                             </div>
+                             <div style="width:40%;text-align:right;">
+                                 <p style="margin:0;"><span t-esc="props.warehouse_details.product_details[0].volume"/><span t-esc="props.warehouse_details.product_details[0].volume_uom_name"/></p>
+                             </div>
+                         </div>
+                        <div style="display:flex; width:100%;background-color:#F3F3F3;padding: 8px 16px;">
+                             <div style="width:60%;">
+                                 <p style="padding-left: 10px;margin:0;">Customer Lead Time</p>
+                             </div>
+                             <div style="width:40%;text-align:right;">
+                                 <p style="margin:0;"><span t-esc="props.warehouse_details.product_details[0].sale_delay"/> days</p>
+                             </div>
+                         </div>
+                    </div>
+                </div>
+            </div>
+
+        </div>
+    </t>
+
+    <t t-name="product_get_info.CollapsableRow" owl="1">
+        <div  style="font-size: 15px; font-weight:400;">
+                <div class="collapse-row"  t-on-click="clickExpand">
+                    <div style="display:flex; width:100%;padding: 8px 16px;">
+                         <div style="width:55%;">
+                             <p><span t-esc="props.warehouse.name"/></p>
+                         </div>
+                         <div style="width:20%;">
+                             <p><span t-esc="props.warehouse.available_quantity"/></p>
+                         </div>
+                         <div style="width:20%;">
+                             <p><span t-esc="props.warehouse.forecasted_quantity"/></p>
+                         </div>
+                        <div style="width:5%;">
+                            <t t-if="!state.is_visible">
+                                <i class="fa fa-arrow-down"></i>
+                            </t>
+                            <t t-elif="state.is_visible">
+                                <i class="fa fa-arrow-up"></i>
+                            </t>
+                        </div>
+                    </div>
+                </div>
+                <t t-if="state.is_visible">
+                    <t t-foreach="props.warehouse.child_locations" t-as="location">
+                         <div style="display:flex; width:100%;background-color:#F3F3F3;color: black;padding: 8px 16px;">
+                             <div style="width:55%;">
+                                 <p style="padding-left: 10px;"><span t-esc="location.location"/></p>
+                             </div>
+                             <div style="width:20%;">
+                                 <p><span t-esc="location.available_quantity"/></p>
+                             </div>
+                             <div style="width:20%;">
+                                 <p><span t-esc="location.forecasted_quantity"/></p>
+                             </div>
+                             <div style="width:5%;">
+                             </div>
+                         </div>
+                    </t>
+                </t>
+        </div>
+    </t>
+
+ </templates>

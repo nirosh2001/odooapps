@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+  <data>
+    <record id="action_product_info" model="ir.actions.client">
+      <field name="name">Product Info</field>
+      <field name="tag">product_info_app</field>
+      <field name="target">current</field>
+    </record>
+    <menuitem name="Product Info" id="product_info_menu_root" action="action_product_info"></menuitem>
+  </data>
+</odoo>
+<!--        <record id="backend_dashboard" model="ir.actions.client">-->
+<!--            <field name="name">Analytics</field>-->
+<!--            <field name="tag">backend_dashboard</field>-->
+<!--        </record>-->
